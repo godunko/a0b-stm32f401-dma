@@ -4,15 +4,13 @@
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
 
---  STM32F401 DMA
-
 pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2022;
 
 with System.Address_To_Access_Conversions;
 
 with A0B.ARMv7M.NVIC_Utilities;
-with A0B.STM32F401.SVD.RCC; --  use A0B.STM32F401.SVD.RCC;
+with A0B.STM32F401.SVD.RCC;
 
 package body A0B.STM32F401.DMA is
 
@@ -316,6 +314,15 @@ package body A0B.STM32F401.DMA is
       end case;
    end Get_Masked_And_Clear_Transfer_Completed;
 
+   ------------------
+   -- On_Interrupt --
+   ------------------
+
+   procedure On_Interrupt (Self : in out DMA_Stream'Class) is
+   begin
+      A0B.Callbacks.Emit (Self.Callback);
+   end On_Interrupt;
+
    ---------------
    -- Registers --
    ---------------
@@ -379,6 +386,17 @@ package body A0B.STM32F401.DMA is
    begin
       return Registers.NDTR.NDT;
    end Remaining_Items;
+
+   ----------------------------
+   -- Set_Interrupt_Callback --
+   ----------------------------
+
+   procedure Set_Interrupt_Callback
+     (Self     : in out DMA_Stream'Class;
+      Callback : A0B.Callbacks.Callback) is
+   begin
+      Self.Callback := Callback;
+   end Set_Interrupt_Callback;
 
    -----------------------
    -- Set_Memory_Buffer --

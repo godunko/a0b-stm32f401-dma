@@ -11,6 +11,7 @@ pragma Restrictions (No_Elaboration_Code);
 with Interfaces;
 with System;
 
+with A0B.Callbacks;
 with A0B.STM32F401.SVD.DMA;
 
 package A0B.STM32F401.DMA
@@ -52,6 +53,10 @@ is
       Count  : Interfaces.Unsigned_16);
    --  Sets address of the memory buffer and number of items to be transferred.
 
+   procedure Set_Interrupt_Callback
+     (Self     : in out DMA_Stream'Class;
+      Callback : A0B.Callbacks.Callback);
+
    procedure Enable (Self : in out DMA_Stream'Class);
    --  Enables stream
 
@@ -87,7 +92,11 @@ private
    type DMA_Stream
      (Controller : not null access DMA_Controller'Class;
       Stream     : Stream_Number;
-      Interrupt  : A0B.STM32F401.Interrupt_Number) is
-        tagged limited null record;
+      Interrupt  : A0B.STM32F401.Interrupt_Number) is tagged limited
+   record
+      Callback : A0B.Callbacks.Callback;
+   end record;
+
+   procedure On_Interrupt (Self : in out DMA_Stream'Class);
 
 end A0B.STM32F401.DMA;

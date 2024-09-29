@@ -4,20 +4,13 @@
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
 
---  STM32F401 DMA
-
---  pragma Restrictions (No_Elaboration_Code);
-
---  private with Interfaces;
---
---  with A0B.ARMv7M;
---  with A0B.STM32F401.SVD.I2C;
-
---  private with A0B.STM32F401.SVD.DMA;
+--  STM32F401 DMA 1 Stream 6
 
 package A0B.STM32F401.DMA.DMA1.Stream6
   with Preelaborate
 is
+
+   pragma Elaborate_Body;
 
    DMA1_Stream6 : aliased DMA_Stream
      (Controller => A0B.STM32F401.DMA.DMA1.DMA1'Access,
