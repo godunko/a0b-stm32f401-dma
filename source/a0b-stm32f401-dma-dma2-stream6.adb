@@ -4,9 +4,7 @@
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
 
-package body A0B.STM32F401.DMA.DMA2.Stream6
-  with Preelaborate
-is
+package body A0B.STM32F401.DMA.DMA2.Stream6 is
 
    procedure DMA2_Stream6_Handler
      with Export, Convention => C, External_Name => "DMA2_Stream6_Handler";
