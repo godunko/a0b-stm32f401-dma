@@ -8,6 +8,7 @@ pragma Restrictions (No_Elaboration_Code);
 pragma Ada_2022;
 
 with System.Address_To_Access_Conversions;
+with System.Storage_Elements;
 
 with A0B.ARMv7M.NVIC_Utilities;
 with A0B.STM32F401.SVD.RCC;
@@ -330,6 +331,10 @@ package body A0B.STM32F401.DMA is
    function Registers
      (Self : DMA_Stream'Class) return not null Stream_Registers_Access
    is
+      pragma Suppress (Access_Check);
+
+      use type System.Storage_Elements.Storage_Offset;
+
       function To_Access
         (Item : System.Address) return Stream_Registers_Access;
 
@@ -347,31 +352,13 @@ package body A0B.STM32F401.DMA is
       end To_Access;
 
    begin
-      case Self.Stream is
-         when 0 =>
-            return To_Access (Self.Controller.Peripheral.S0CR'Address);
+      --  This subprogram is implemented with use of address arithmetic for
+      --  performance.
 
-         when 1 =>
-            return To_Access (Self.Controller.Peripheral.S1CR'Address);
-
-         when 2 =>
-            return To_Access (Self.Controller.Peripheral.S2CR'Address);
-
-         when 3 =>
-            return To_Access (Self.Controller.Peripheral.S3CR'Address);
-
-         when 4 =>
-            return To_Access (Self.Controller.Peripheral.S4CR'Address);
-
-         when 5 =>
-            return To_Access (Self.Controller.Peripheral.S5CR'Address);
-
-         when 6 =>
-            return To_Access (Self.Controller.Peripheral.S6CR'Address);
-
-         when 7 =>
-            return To_Access (Self.Controller.Peripheral.S7CR'Address);
-      end case;
+      return
+        To_Access
+          (Self.Controller.Peripheral.S0CR'Address
+             + System.Storage_Elements.Storage_Offset (Self.Stream) * 16#18#);
    end Registers;
 
    ---------------------
