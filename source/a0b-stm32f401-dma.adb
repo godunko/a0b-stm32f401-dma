@@ -379,7 +379,7 @@ package body A0B.STM32F401.DMA is
    ---------------------
 
    function Remaining_Items
-     (Self : DMA_Stream'Class) return Interfaces.Unsigned_16
+     (Self : DMA_Stream'Class) return A0B.Types.Unsigned_16
    is
       Registers : constant not null Stream_Registers_Access := Self.Registers;
 

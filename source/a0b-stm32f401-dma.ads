@@ -8,11 +8,11 @@
 
 pragma Restrictions (No_Elaboration_Code);
 
-with Interfaces;
 with System;
 
 with A0B.Callbacks;
 with A0B.STM32F401.SVD.DMA;
+with A0B.Types;
 
 package A0B.STM32F401.DMA
   with Preelaborate
@@ -67,7 +67,7 @@ is
      (Self : in out DMA_Stream'Class);
 
    function Remaining_Items
-     (Self : DMA_Stream'Class) return Interfaces.Unsigned_16;
+     (Self : DMA_Stream'Class) return A0B.Types.Unsigned_16;
 
    --  function Is_Transfer_Completed (Self : DMA_Stream'Class) return Boolean;
 
