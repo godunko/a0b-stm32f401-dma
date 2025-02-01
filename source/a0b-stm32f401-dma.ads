@@ -51,7 +51,8 @@ is
       Channel              : Channel_Number;
       Peripheral           : System.Address;
       Peripheral_Data_Size : Data_Size;
-      Memory_Data_Size     : Data_Size);
+      Memory_Data_Size     : Data_Size;
+      Circular_Mode        : Boolean := False);
 
    procedure Set_Memory_Buffer
      (Self      : in out DMA_Stream'Class;

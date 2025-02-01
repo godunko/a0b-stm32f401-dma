@@ -161,7 +161,8 @@ package body A0B.STM32F401.DMA is
       Channel              : Channel_Number;
       Peripheral           : System.Address;
       Peripheral_Data_Size : Data_Size;
-      Memory_Data_Size     : Data_Size)
+      Memory_Data_Size     : Data_Size;
+      Circular_Mode        : Boolean := False)
    is
       Registers : constant not null Stream_Registers_Access := Self.Registers;
 
@@ -172,25 +173,26 @@ package body A0B.STM32F401.DMA is
          Aux : A0B.STM32F401.SVD.DMA.S1CR_Register := Registers.CR;
 
       begin
-         Aux.EN     := False;  --  Stream disabled
-         Aux.DMEIE  := False;  --  DME interrupt disabled
-         Aux.TEIE   := False;  --  TE interrupt disabled
-         Aux.HTIE   := False;  --  HT interrupt disabled
-         Aux.TCIE   := False;  --  TC interrupt enabled
-         Aux.PFCTRL := False;  --  The DMA is the flow controller
-         Aux.CIRC   := False;  --  Circular mode disabled
-         Aux.PINC   := False;  --  Peripheral address pointer is fixed
+         Aux.EN     := False;          --  Stream disabled
+         Aux.DMEIE  := False;          --  DME interrupt disabled
+         Aux.TEIE   := False;          --  TE interrupt disabled
+         Aux.HTIE   := False;          --  HT interrupt disabled
+         Aux.TCIE   := False;          --  TC interrupt enabled
+         Aux.PFCTRL := False;          --  The DMA is the flow controller
+         Aux.CIRC   := Circular_Mode;  --  Circular mode enabled/disabled
+         Aux.PINC   := False;          --  Peripheral address pointer is fixed
          --  Aux.PINCOS := <>;     --  No meaning when PINC = False
          Aux.MINC   := True;
          --  Memory address pointer is incremented after each data transfer
          --  (increment is done according to MSIZE)
-         Aux.DBM    := False;  --  No buffer switching at the end of transfer
+         Aux.DBM    := False;
+         --  No buffer switching at the end of transfer
          Aux.CT     := False;
          --  The current target memory is Memory 0 (addressed by the
          --  DMA_SxM0AR pointer)
          --  Aux.ACK    := <>;     --  ??? Not documented
-         Aux.PBURST := 2#00#;  --  single transfer
-         Aux.MBURST := 2#00#;  --  single transfer
+         Aux.PBURST := 2#00#;          --  single transfer
+         Aux.MBURST := 2#00#;          --  single transfer
 
          Aux.PSIZE  :=
            (case Peripheral_Data_Size is
