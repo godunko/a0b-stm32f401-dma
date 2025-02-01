@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2024, Vadim Godunko <vgodunko@gmail.com>
+--  Copyright (C) 2024-2025, Vadim Godunko <vgodunko@gmail.com>
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -93,9 +93,11 @@ package body A0B.STM32F401.DMA is
    ------------------------------------
 
    procedure Configure_Memory_To_Peripheral
-     (Self       : in out DMA_Stream'Class;
-      Channel    : Channel_Number;
-      Peripheral : System.Address)
+     (Self                 : in out DMA_Stream'Class;
+      Channel              : Channel_Number;
+      Peripheral           : System.Address;
+      Peripheral_Data_Size : Data_Size;
+      Memory_Data_Size     : Data_Size)
    is
       Registers : constant not null Stream_Registers_Access := Self.Registers;
 
@@ -126,8 +128,16 @@ package body A0B.STM32F401.DMA is
          Aux.PBURST := 2#00#;  --  single transfer
          Aux.MBURST := 2#00#;  --  single transfer
 
-         Aux.PSIZE  := 2#00#;  --  Byte (8-bit)
-         Aux.MSIZE  := 2#00#;  --  Byte (8-bit)
+         Aux.PSIZE  :=
+           (case Peripheral_Data_Size is
+               when Byte      => 2#00#,   --  00: byte (8-bit)
+               when Half_Word => 2#01#,   --  01: half-word (16-bit)
+               when Word      => 2#10#);  --  10: word (32-bit)
+         Aux.MSIZE  :=
+           (case Memory_Data_Size is
+               when Byte      => 2#00#,   --  00: byte (8-bit)
+               when Half_Word => 2#01#,   --  01: half-word (16-bit)
+               when Word      => 2#10#);  --  10: word (32-bit)
          Aux.PL     := 2#10#;  --  High
 
          Aux.DIR    := 2#01#;  --  Memory-to-peripheral
@@ -147,9 +157,11 @@ package body A0B.STM32F401.DMA is
    ------------------------------------
 
    procedure Configure_Peripheral_To_Memory
-     (Self       : in out DMA_Stream'Class;
-      Channel    : Channel_Number;
-      Peripheral : System.Address)
+     (Self                 : in out DMA_Stream'Class;
+      Channel              : Channel_Number;
+      Peripheral           : System.Address;
+      Peripheral_Data_Size : Data_Size;
+      Memory_Data_Size     : Data_Size)
    is
       Registers : constant not null Stream_Registers_Access := Self.Registers;
 
@@ -180,8 +192,16 @@ package body A0B.STM32F401.DMA is
          Aux.PBURST := 2#00#;  --  single transfer
          Aux.MBURST := 2#00#;  --  single transfer
 
-         Aux.PSIZE  := 2#00#;  --  Byte (8-bit)
-         Aux.MSIZE  := 2#00#;  --  Byte (8-bit)
+         Aux.PSIZE  :=
+           (case Peripheral_Data_Size is
+               when Byte      => 2#00#,   --  00: byte (8-bit)
+               when Half_Word => 2#01#,   --  01: half-word (16-bit)
+               when Word      => 2#10#);  --  10: word (32-bit)
+         Aux.MSIZE  :=
+           (case Memory_Data_Size is
+               when Byte      => 2#00#,   --  00: byte (8-bit)
+               when Half_Word => 2#01#,   --  01: half-word (16-bit)
+               when Word      => 2#10#);  --  10: word (32-bit)
          Aux.PL     := 2#10#;  --  High
 
          Aux.DIR    := 2#00#;  --  Peripheral-to-memory

@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2024, Vadim Godunko <vgodunko@gmail.com>
+--  Copyright (C) 2024-2025, Vadim Godunko <vgodunko@gmail.com>
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -24,6 +24,8 @@ is
 
    type Channel_Number is mod 8;
 
+   type Data_Size is (Byte, Half_Word, Word);
+
    type DMA_Controller
      (Peripheral : not null access A0B.STM32F401.SVD.DMA.DMA_Peripheral;
       Controller : Controller_Number) is
@@ -36,16 +38,20 @@ is
      tagged limited private with Preelaborable_Initialization;
 
    procedure Configure_Memory_To_Peripheral
-     (Self       : in out DMA_Stream'Class;
-      Channel    : Channel_Number;
-      Peripheral : System.Address);
+     (Self                 : in out DMA_Stream'Class;
+      Channel              : Channel_Number;
+      Peripheral           : System.Address;
+      Peripheral_Data_Size : Data_Size;
+      Memory_Data_Size     : Data_Size);
    --  Configure stream to do memory-to-peripheral transfers. All stream's
    --  interrupts are disabled, while NVIC interrupts are enabled.
 
    procedure Configure_Peripheral_To_Memory
-     (Self       : in out DMA_Stream'Class;
-      Channel    : Channel_Number;
-      Peripheral : System.Address);
+     (Self                 : in out DMA_Stream'Class;
+      Channel              : Channel_Number;
+      Peripheral           : System.Address;
+      Peripheral_Data_Size : Data_Size;
+      Memory_Data_Size     : Data_Size);
 
    procedure Set_Memory_Buffer
      (Self   : in out DMA_Stream'Class;
