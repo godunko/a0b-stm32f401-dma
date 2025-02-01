@@ -410,13 +410,15 @@ package body A0B.STM32F401.DMA is
    -----------------------
 
    procedure Set_Memory_Buffer
-     (Self   : in out DMA_Stream'Class;
-      Memory : System.Address;
-      Count  : Interfaces.Unsigned_16)
+     (Self      : in out DMA_Stream'Class;
+      Memory    : System.Address;
+      Count     : A0B.Types.Unsigned_16;
+      Increment : Boolean := True)
    is
       Registers : constant not null Stream_Registers_Access := Self.Registers;
 
    begin
+      Registers.CR.MINC  := Increment;
       Registers.M0AR     := Memory;
       Registers.NDTR.NDT := Count;
    end Set_Memory_Buffer;

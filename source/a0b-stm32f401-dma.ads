@@ -54,10 +54,13 @@ is
       Memory_Data_Size     : Data_Size);
 
    procedure Set_Memory_Buffer
-     (Self   : in out DMA_Stream'Class;
-      Memory : System.Address;
-      Count  : Interfaces.Unsigned_16);
+     (Self      : in out DMA_Stream'Class;
+      Memory    : System.Address;
+      Count     : A0B.Types.Unsigned_16;
+      Increment : Boolean := True);
    --  Sets address of the memory buffer and number of items to be transferred.
+   --
+   --  @param Increment  Whether or not to increment memory address.
 
    procedure Set_Interrupt_Callback
      (Self     : in out DMA_Stream'Class;
