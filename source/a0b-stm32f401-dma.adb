@@ -255,6 +255,17 @@ package body A0B.STM32F401.DMA is
       end case;
    end Enable_Clock;
 
+   ------------------------------------
+   -- Enable_Half_Transfer_Interrupt --
+   ------------------------------------
+
+   procedure Enable_Half_Transfer_Interrupt (Self : in out DMA_Stream'Class) is
+      Registers : constant not null Stream_Registers_Access := Self.Registers;
+
+   begin
+      Registers.CR.HTIE := True;
+   end Enable_Half_Transfer_Interrupt;
+
    ----------------------------------------
    -- Enable_Transfer_Complete_Interrupt --
    ----------------------------------------
@@ -267,6 +278,75 @@ package body A0B.STM32F401.DMA is
    begin
       Registers.CR.TCIE := True;
    end Enable_Transfer_Complete_Interrupt;
+
+   ----------------------------------------
+   -- Get_Masked_And_Clear_Half_Transfer --
+   ----------------------------------------
+
+   function Get_Masked_And_Clear_Half_Transfer
+     (Self : in out DMA_Stream'Class) return Boolean
+   is
+      Registers : constant not null Stream_Registers_Access := Self.Registers;
+
+   begin
+      case Self.Stream is
+         when 0 =>
+            return Result : constant Boolean :=
+              Self.Controller.Peripheral.LISR.HTIF0 and Registers.CR.HTIE
+            do
+               Self.Controller.Peripheral.LIFCR.CHTIF0 := True;
+            end return;
+
+         when 1 =>
+            return Result : constant Boolean :=
+              Self.Controller.Peripheral.LISR.HTIF1 and Registers.CR.HTIE
+            do
+               Self.Controller.Peripheral.LIFCR.CHTIF1 := True;
+            end return;
+
+         when 2 =>
+            return Result : constant Boolean :=
+              Self.Controller.Peripheral.LISR.HTIF2 and Registers.CR.HTIE
+            do
+               Self.Controller.Peripheral.LIFCR.CHTIF2 := True;
+            end return;
+
+         when 3 =>
+            return Result : constant Boolean :=
+              Self.Controller.Peripheral.LISR.HTIF3 and Registers.CR.HTIE
+            do
+               Self.Controller.Peripheral.LIFCR.CHTIF3 := True;
+            end return;
+
+         when 4 =>
+            return Result : constant Boolean :=
+              Self.Controller.Peripheral.HISR.HTIF4 and Registers.CR.HTIE
+            do
+               Self.Controller.Peripheral.HIFCR.CHTIF4 := True;
+            end return;
+
+         when 5 =>
+            return Result : constant Boolean :=
+              Self.Controller.Peripheral.HISR.HTIF5 and Registers.CR.HTIE
+            do
+               Self.Controller.Peripheral.HIFCR.CHTIF5 := True;
+            end return;
+
+         when 6 =>
+            return Result : constant Boolean :=
+              Self.Controller.Peripheral.HISR.HTIF6 and Registers.CR.HTIE
+            do
+               Self.Controller.Peripheral.HIFCR.CHTIF6 := True;
+            end return;
+
+         when 7 =>
+            return Result : constant Boolean :=
+              Self.Controller.Peripheral.HISR.HTIF7 and Registers.CR.HTIE
+            do
+               Self.Controller.Peripheral.HIFCR.CHTIF7 := True;
+            end return;
+      end case;
+   end Get_Masked_And_Clear_Half_Transfer;
 
    ---------------------------------------------
    -- Get_Masked_And_Clear_Transfer_Completed --

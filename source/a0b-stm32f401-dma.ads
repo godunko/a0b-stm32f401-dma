@@ -73,6 +73,8 @@ is
    procedure Disable (Self : in out DMA_Stream'Class);
    --  Disables stream
 
+   procedure Enable_Half_Transfer_Interrupt (Self : in out DMA_Stream'Class);
+
    procedure Enable_Transfer_Complete_Interrupt
      (Self : in out DMA_Stream'Class);
 
@@ -80,6 +82,12 @@ is
      (Self : DMA_Stream'Class) return A0B.Types.Unsigned_16;
 
    --  function Is_Transfer_Completed (Self : DMA_Stream'Class) return Boolean;
+
+   function Get_Masked_And_Clear_Half_Transfer
+     (Self : in out DMA_Stream'Class) return Boolean;
+   --  Returns True when half transfer and interrupt is enabled (both
+   --  xISR.HT and SxCR.HTIE are set to 1); and clear interrupt status
+   --  unconditionally.
 
    function Get_Masked_And_Clear_Transfer_Completed
      (Self : in out DMA_Stream'Class) return Boolean;
